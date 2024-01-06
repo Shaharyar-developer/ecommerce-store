@@ -17,16 +17,16 @@ import Image from "next/image";
 export const CartCard = ({ product }: { product: Product }) => {
   const { updateItemQuantity, removeItem } = useCart();
   return (
-    <Card className="overflow-x-hidden">
+    <Card className="overflow-x-hidden min-w-[20%] relative flex flex-col">
       <CardHeader>
         <CardTitle>{product.title}</CardTitle>
         <CardDescription>
           {product.description.substring(0, 100)}...
         </CardDescription>
       </CardHeader>
-      <CardContent className="">
+      <CardContent className="flex flex-col flex-grow justify-center">
         <Image
-          className="max-w-max mx-auto object-contain py-4"
+          className="max-w-max mx-auto object-contain py-4 flex-1"
           src={product.image}
           height={100}
           width={100}

@@ -38,7 +38,7 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
     return 0;
   });
   const RenderCard = (product: Product) => (
-    <Card className="min-w-[20%] relative flex-col flex" key={product.id}>
+    <Card className="min-w-[20%] relative flex flex-col " key={product.id}>
       <CardHeader>
         <CardTitle className="text-ellipsis whitespace-nowrap overflow-hidden">
           {product.title}
