@@ -5,6 +5,8 @@ import type { Product } from "@/lib/types";
 
 import { ProductDialog } from "./product-dialog";
 
+import { toast } from "sonner";
+
 import {
   Card,
   CardContent,
@@ -20,6 +22,7 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 
 import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 
 export const ProductCards = ({ products }: { products: Product[] }) => {
   const [query] = useQueryState("search");
@@ -34,7 +37,6 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
     }
     return 0;
   });
-
   const RenderCard = (product: Product) => (
     <Card className="min-w-[20%] relative flex-col flex" key={product.id}>
       <CardHeader>

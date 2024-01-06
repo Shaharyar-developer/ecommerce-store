@@ -1,5 +1,12 @@
 "use client";
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { safeLocalStorage } from "@/lib/utils";
 import { Product } from "@/lib/types";
 
 interface CartContextValue {
@@ -12,9 +19,15 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<Product[]>(
-    JSON.parse(localStorage.getItem("cart") || "[]")
-  );
+  const [cart, setCart] = useState<Product[]>(() => {
+    const storedCart = safeLocalStorage.getItem("cart");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
+
+  useEffect(() => {
+    safeLocalStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
   const addToCart = (product: Product) => {
     const existingProduct = cart.find((p) => p.id === product.id);
     if (existingProduct) {
@@ -31,12 +44,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       const newCart = [...cart, { ...product, quantity: 1 }];
       setCart(() => newCart);
     }
-    localStorage.setItem("cart", JSON.stringify(cart));
   };
   const removeItem = (productId: number) => {
     const updatedCart = cart.filter((product) => product.id !== productId);
-    setCart(() => updatedCart);
-    localStorage.setItem("cart", JSON.stringify(cart));
+    setCart(() => {
+      safeLocalStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
   const updateItemQuantity = (productId: number, quantity: number) => {
     if (quantity <= 0) {
@@ -47,8 +61,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const updatedCart = cart.map((product) =>
       product.id === productId ? { ...product, quantity } : product
     );
-    setCart(() => updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCart(() => {
+      safeLocalStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
 
   return (

@@ -5,7 +5,8 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CartProvider } from "@/hooks/useCart";
 
-import { Toaster } from "@/components/ui/sonner";
+
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +31,7 @@ export default function RootLayout({
         >
           <CartProvider>{children}</CartProvider>
         </ThemeProvider>
-        <Toaster />
+        <Toaster richColors />
       </body>
     </html>
   );
