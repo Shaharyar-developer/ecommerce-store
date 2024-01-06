@@ -12,18 +12,26 @@ import {
 import { Trash2, Plus, Minus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useCart } from "@/hooks/useCart";
+import Image from "next/image";
 
 export const CartCard = ({ product }: { product: Product }) => {
   const { updateItemQuantity, removeItem } = useCart();
   return (
-    <Card>
+    <Card className="overflow-x-hidden">
       <CardHeader>
         <CardTitle>{product.title}</CardTitle>
         <CardDescription>
           {product.description.substring(0, 100)}...
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="">
+        <Image
+          className="max-w-max mx-auto object-contain py-4"
+          src={product.image}
+          height={100}
+          width={100}
+          alt=""
+        />
         <p className="flex text-lg font-semibold">
           Price Per Item: ${product.price}
         </p>
