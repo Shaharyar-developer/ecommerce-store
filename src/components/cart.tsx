@@ -26,10 +26,8 @@ export default function Cart({ cart }: { cart: Product[] }) {
     : null;
   useEffect(() => {
     setFixedCart(() => {
-      console.log(cart);
       return cart;
     });
-    console.log(fixedCart);
   }, [cart, fixedCart]);
   const closeModal = () => setOpen(false);
   return (

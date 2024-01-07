@@ -17,7 +17,6 @@ export default function NavBar() {
     setQuery(e.target.value);
   };
   const { cart } = useCart();
-  console.log(cart);
 
   return (
     <>
