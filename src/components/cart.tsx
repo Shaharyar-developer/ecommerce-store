@@ -6,6 +6,9 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+
+import { CheckOut } from "./check-out";
+
 import { Button } from "./ui/button";
 
 import { CartCard } from "./cart-card";
@@ -13,6 +16,7 @@ import { Product } from "@/lib/types";
 import { useEffect, useState } from "react";
 
 export default function Cart({ cart }: { cart: Product[] }) {
+  const [open, setOpen] = useState(false);
   const [fixedCart, setFixedCart] = useState<Product[] | null>(null);
   const total = cart
     ? cart.reduce(
@@ -27,6 +31,7 @@ export default function Cart({ cart }: { cart: Product[] }) {
     });
     console.log(fixedCart);
   }, [cart, fixedCart]);
+  const closeModal = () => setOpen(false);
   return (
     <>
       <DrawerContent className="">
@@ -35,18 +40,15 @@ export default function Cart({ cart }: { cart: Product[] }) {
         </DrawerHeader>
 
         <DrawerDescription className="ml-4 mb-4">
-          {cart ? (
-            cart.length > 0 ? (
+          {cart &&
+            (cart.length > 0 ? (
               <>
                 You have {cart?.length} items, totalling $
                 {Math.floor(total ? total : 0 * 100) / 1}
               </>
             ) : (
               <>Your Cart is Empty</>
-            )
-          ) : (
-            <></>
-          )}
+            ))}
         </DrawerDescription>
         <div
           className="grid lg:grid-cols-3 max-h-[75svh] overflow-y-auto
@@ -58,10 +60,11 @@ export default function Cart({ cart }: { cart: Product[] }) {
         </div>
         <DrawerFooter className="">
           <DrawerClose asChild>
-            <Button>Check Out</Button>
+            <Button onClick={() => setOpen(true)}>Check Out</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
+      <CheckOut closeModal={closeModal} open={open} />
     </>
   );
 }

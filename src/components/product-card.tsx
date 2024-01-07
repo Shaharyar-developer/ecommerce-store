@@ -5,7 +5,7 @@ import type { Product } from "@/lib/types";
 
 import { ProductDialog } from "./product-dialog";
 
-import { toast } from "sonner";
+import { Star } from "lucide-react";
 
 import {
   Card,
@@ -22,7 +22,6 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 
 import { useQueryState } from "nuqs";
-import { useEffect } from "react";
 
 export const ProductCards = ({ products }: { products: Product[] }) => {
   const [query] = useQueryState("search");
@@ -38,7 +37,10 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
     return 0;
   });
   const RenderCard = (product: Product) => (
-    <Card className="min-w-[20%] relative flex flex-col " key={product.id}>
+    <Card
+      className="min-w-[20%] relative flex flex-col rounded-none"
+      key={product.id}
+    >
       <CardHeader>
         <CardTitle className="text-ellipsis whitespace-nowrap overflow-hidden">
           {product.title}
@@ -59,7 +61,17 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
         />
       </CardContent>
       <CardFooter className="grid gap-4">
-        <p className="flex text-lg font-semibold">Price: ${product.price}</p>
+        <div className="flex justify-between w-full">
+          <p className="flex text-lg font-semibold">Price: ${product.price}</p>
+          <div className="flex items-center gap-2">
+            <p className="flex gap-1 text-md items-center text-lg font-semibold">
+              {product.rating?.rate} <Star />{" "}
+            </p>
+            <span className="text-muted-foreground">
+              ({product.rating?.count})
+            </span>
+          </div>
+        </div>
         <Dialog>
           <DialogTrigger asChild>
             <Button>View</Button>
