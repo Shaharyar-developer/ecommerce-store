@@ -17,7 +17,7 @@ export default async function Products() {
       <span className="w-full h-[1px] lg:w-[1px] bg-border" />
       <main className="max-w-[95%] rounded-lg lg:mt-12 mb-12 pb-32 lg:pb-28 mx-auto max-h-[90svh] md:max-w-[85%] flex flex-col gap-12">
         <div className="pb-4 p-6 px-8 bg-accent flex flex-col justify-center rounded">
-          <h2 className="text-center text-3xl mb-2 font-bold">
+          <h2 className="text-center text-3xl mb-2 font-bold md:-mt-8 lg:-mt-12">
             <svg viewBox="0 0.3 10 0.75">
               <text
                 x="5"
