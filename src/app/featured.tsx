@@ -28,14 +28,14 @@ export default function Featured({ products }: { products: Product[] }) {
             <text
               x="5"
               y="1"
-              text-anchor="middle"
+              textAnchor="middle"
               fill="none"
-              stroke-width=".015"
+              strokeWidth=".008"
               stroke="#000"
-              font-family="sans-serif"
+              fontFamily="sans-serif"
               fontStyle={"italic"}
-              stroke-dasharray="100"
-              stroke-dashoffset="100"
+              strokeDasharray="100"
+              strokeDashoffset="100"
               className="responsive-text text-[0.85px] sm:text-[0.6px] md:text-[0.4px]"
             >
               <animate

@@ -41,11 +41,15 @@ export function CheckOut({
   const { clearCart } = useCart();
   const [country, setCountry] = useState<string>("Pakistan");
   const [city, setCity] = useState<string>("");
+  const phoneRegex = new RegExp(
+    /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+  );
 
   const formSchema = z.object({
     firstname: z.string().min(2).max(50),
     lastname: z.string().min(2).max(50),
     email: z.string().email("Invalid Email"),
+    phone: z.string().regex(phoneRegex, "Invalid Number!"),
     country: z.string().min(2, "Too Short!"),
     city: z.string().min(2, "Required Field"),
     address: z.string().min(2, "Too Short!"),
@@ -56,9 +60,10 @@ export function CheckOut({
     defaultValues: {
       firstname: "",
       lastname: "",
+      email: "",
+      phone: "+",
       country: country,
       city: city,
-      email: "",
       address: "",
     },
   });
@@ -70,6 +75,7 @@ export function CheckOut({
     setCity(watchedCity);
   }, [watchedCountry, watchedCity]);
   function onSubmit(values: z.infer<typeof formSchema>) {
+    closeModal();
     clearCart();
     toast.success(
       <div className="flex flex-col">
@@ -132,6 +138,23 @@ export function CheckOut({
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="example@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="+923131313313"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -208,9 +231,7 @@ export function CheckOut({
             <AlertDialogFooter>
               <AlertDialogCancel onClick={closeModal}>Cancel</AlertDialogCancel>
               <AlertDialogAction asChild>
-                <Button onClick={closeModal} type="submit">
-                  Submit
-                </Button>
+                <Button type="submit">Submit</Button>
               </AlertDialogAction>
             </AlertDialogFooter>
           </form>

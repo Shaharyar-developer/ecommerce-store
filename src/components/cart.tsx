@@ -10,7 +10,7 @@ import {
 import { CheckOut } from "./check-out";
 
 import { Button } from "./ui/button";
-
+import { toast } from "sonner";
 import { CartCard } from "./cart-card";
 import { Product } from "@/lib/types";
 import { useEffect, useState } from "react";
@@ -58,7 +58,17 @@ export default function Cart({ cart }: { cart: Product[] }) {
         </div>
         <DrawerFooter className="">
           <DrawerClose asChild>
-            <Button onClick={() => setOpen(true)}>Check Out</Button>
+            <Button
+              onClick={() => {
+                console.log(cart.length);
+
+                cart.length === 0
+                  ? toast.error("Your Cart is Empty")
+                  : setOpen(true);
+              }}
+            >
+              Check Out
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
