@@ -14,6 +14,7 @@ interface CartContextValue {
   addToCart: (product: Product) => void;
   removeItem: (productId: number) => void;
   updateItemQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -66,10 +67,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       return updatedCart;
     });
   };
+  const clearCart = () => {
+    setCart(() => {
+      safeLocalStorage.setItem("cart", JSON.stringify([]));
+      return [];
+    });
+  };
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeItem, updateItemQuantity }}
+      value={{ cart, addToCart, removeItem, updateItemQuantity, clearCart }}
     >
       {children}
     </CartContext.Provider>

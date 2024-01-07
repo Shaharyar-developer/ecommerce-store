@@ -12,7 +12,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,15 +19,18 @@ import {
 } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { CountrySelector } from "@/components/ui/country-selector";
+import { Input } from "@/components/ui/input";
 
 import { countries } from "@/lib/countries.min";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
+import { CitySelector } from "./ui/city-selector";
 
+import { toast } from "sonner";
+import { useCart } from "@/hooks/useCart";
 export function CheckOut({
   open,
   closeModal,
@@ -36,12 +38,16 @@ export function CheckOut({
   open: boolean;
   closeModal: () => void;
 }) {
+  const { clearCart } = useCart();
   const [country, setCountry] = useState<string>("Pakistan");
+  const [city, setCity] = useState<string>("");
+
   const formSchema = z.object({
     firstname: z.string().min(2).max(50),
     lastname: z.string().min(2).max(50),
     email: z.string().email("Invalid Email"),
-
+    country: z.string().min(2, "Too Short!"),
+    city: z.string().min(2, "Required Field"),
     address: z.string().min(2, "Too Short!"),
   });
 
@@ -50,13 +56,35 @@ export function CheckOut({
     defaultValues: {
       firstname: "",
       lastname: "",
+      country: country,
+      city: city,
       email: "",
-
       address: "",
     },
   });
+  const { watch } = form;
+  const watchedCountry = watch("country");
+  const watchedCity = watch("city");
+  useEffect(() => {
+    setCountry(watchedCountry);
+    setCity(watchedCity);
+  }, [watchedCountry, watchedCity]);
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    clearCart();
+    toast.success(
+      <div className="flex flex-col">
+        <p className="underline">You Submitted</p>
+        <pre>
+          <code lang="json" className="text-xs text-ellipsis">
+            {JSON.stringify(
+              { ...values, address: values.address.substring(0, 25) + "..." },
+              null,
+              2
+            )}
+          </code>
+        </pre>
+      </div>
+    );
   }
 
   return (
@@ -79,7 +107,6 @@ export function CheckOut({
                   <FormControl>
                     <Input placeholder="John" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -93,7 +120,6 @@ export function CheckOut({
                   <FormControl>
                     <Input placeholder="Doe" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -111,11 +137,80 @@ export function CheckOut({
                 </FormItem>
               )}
             />
-            <CountrySelector countries={countries} />
+            <Controller
+              control={form.control}
+              name="country"
+              rules={{ required: "Country is required" }}
+              render={({ field: { onChange }, fieldState: { error } }) => (
+                <FormItem>
+                  <FormLabel>
+                    {error ? (
+                      <p className="text-destructive">Country</p>
+                    ) : (
+                      "Country"
+                    )}
+                  </FormLabel>
+                  <FormControl>
+                    <>
+                      <CountrySelector
+                        defaultCountry={country}
+                        setCountry={onChange}
+                        countries={countries}
+                      />
+                      {error && (
+                        <p className="text-destructive font-normal">
+                          {error.message}
+                        </p>
+                      )}
+                    </>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="city"
+              rules={{ required: "City is required" }}
+              render={({ field: { onChange }, fieldState: { error } }) => (
+                <FormItem>
+                  <FormLabel>
+                    {error ? <p className="text-destructive">City</p> : "City"}
+                  </FormLabel>
+                  <FormControl>
+                    <>
+                      <CitySelector
+                        setCity={onChange}
+                        country={watchedCountry}
+                      />
+                      {error && (
+                        <p className="text-destructive font-normal">
+                          {error.message}
+                        </p>
+                      )}
+                    </>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <AlertDialogFooter>
               <AlertDialogCancel onClick={closeModal}>Cancel</AlertDialogCancel>
               <AlertDialogAction asChild>
-                <Button type="submit">Submit</Button>
+                <Button onClick={closeModal} type="submit">
+                  Submit
+                </Button>
               </AlertDialogAction>
             </AlertDialogFooter>
           </form>
