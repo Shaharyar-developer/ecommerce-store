@@ -83,7 +83,7 @@ export function CheckOut({
         <pre>
           <code lang="json" className="text-xs text-ellipsis">
             {JSON.stringify(
-              { ...values, address: values.address.substring(0, 25) + "..." },
+              { ...values, address: `${values.address.substring(0, 25)}...` },
               null,
               2
             )}
@@ -95,7 +95,7 @@ export function CheckOut({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-h-[75svh] lg:max-h-[100svh] overflow-y-auto">
         <AlertDialogHeader>
           <AlertDialogTitle>Delivery Details</AlertDialogTitle>
           <AlertDialogDescription>
