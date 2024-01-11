@@ -2,7 +2,9 @@ import { ProductCards } from "@/components/product-card";
 import { Product } from "@/lib/types";
 import { Category } from "@/components/category-menu";
 import { Sort } from "@/components/sorting-menu";
+import { PaginationTab } from "@/components/product-card";
 import Featured from "./featured";
+
 export default async function Products() {
   const res = await fetch("https://fakestoreapi.com/products");
   const data = await fetch("https://fakestoreapi.com/products/categories");
@@ -16,11 +18,12 @@ export default async function Products() {
         <Sort />
       </div>
       <span className="w-full h-[1px] lg:w-[1px] bg-border" />
-      <main className="max-w-[95%] rounded-lg lg:mt-12 mb-12 pb-32 lg:pb-28 mx-auto max-h-[90svh] md:max-w-[85%] flex flex-col gap-12">
+      <main className="max-w-[95%] min-h-[90svh] rounded-lg lg:mt-12 mb-12 mx-auto h-max md:max-w-[85%] flex flex-col gap-12">
         <Featured products={products} />
         <div className=" grid lg:grid-cols-4">
           <ProductCards products={products} />
         </div>
+        <PaginationTab />
       </main>
     </section>
   );

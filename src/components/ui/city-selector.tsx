@@ -75,10 +75,6 @@ const CitySelector = React.forwardRef<HTMLSelectElement, CitySelectorProps>(
                         currentValue.charAt(0).toUpperCase() +
                           currentValue.slice(1)
                       );
-                      console.log(
-                        currentValue.charAt(0).toUpperCase() +
-                          currentValue.slice(1)
-                      );
 
                       setOpen(false);
                     }}

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-
+import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CartProvider } from "@/hooks/useCart";
-
 
 import { Toaster } from "sonner";
 

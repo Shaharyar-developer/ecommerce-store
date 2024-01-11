@@ -15,6 +15,16 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
@@ -22,11 +32,19 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 
 import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 
 export const ProductCards = ({ products }: { products: Product[] }) => {
+  const [page, setPage] = useQueryState("page");
   const [query] = useQueryState("search");
   const [sort] = useQueryState("sort");
   const sortBy = sort as Sorts;
+  useEffect(() => {
+    if (!page) {
+      setPage("1");
+    }
+  }, [page]);
+
   const sortedProducts = [...products].sort((a, b) => {
     if (sortBy === "price low to high") {
       return a.price - b.price;
@@ -36,6 +54,12 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
     }
     return 0;
   });
+
+  const midpoint = Math.ceil(sortedProducts.length / 2);
+  const productsToRender =
+    page === "1"
+      ? sortedProducts.slice(0, midpoint)
+      : sortedProducts.slice(midpoint);
   const RenderCard = (product: Product) => (
     <Card
       className="min-w-[20%] relative flex flex-col rounded-none"
@@ -85,14 +109,14 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
   if (query === null) {
     return (
       <>
-        {sortedProducts.map((product) => (
+        {productsToRender.map((product) => (
           <RenderCard key={product.id} {...product} />
         ))}
       </>
     );
   }
 
-  const filteredProducts = sortedProducts.filter((product) => {
+  const filteredProducts = productsToRender.filter((product) => {
     const isTitleMatch = product.title
       .toLowerCase()
       .includes(query.toLowerCase());
@@ -114,5 +138,56 @@ export const ProductCards = ({ products }: { products: Product[] }) => {
         <RenderCard key={product.id} {...product} />
       ))}
     </>
+  );
+};
+export const PaginationTab = () => {
+  const [page, setPage] = useQueryState("page");
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => {
+              Number(page) > 1
+                ? setPage((Number(page) - 1).toString())
+                : setPage("1");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink
+            aria-disabled={page === "1"}
+            onClick={() => {
+              setPage("1");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            1
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink
+            aria-disabled={page === "2"}
+            onClick={() => {
+              setPage("2");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            2
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext
+            onClick={() => {
+              Number(page) < 2
+                ? setPage((Number(page) + 1).toString())
+                : setPage("2");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 };
